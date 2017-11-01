@@ -20,7 +20,7 @@ using namespace std;
 using namespace RooFit;
 void doFitJpsi_Data(
        int collId = kAADATA,  
-       float ptLow=6.5, float ptHigh=30, 
+       float ptLow=6.5, float ptHigh=50, 
        float yLow=0, float yHigh=1.6,
        int cLow=0, int cHigh=200,
        float muPtCut1=3.5,
@@ -92,7 +92,7 @@ void doFitJpsi_Data(
   PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
   initPset.SetMCSgl();
 
-  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.02, 0.3);
+  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.01, 0.3);
   RooFormulaVar sigma2s_1("sigma2s_1","@0*@1",RooArgList(sigma1s_1,mRatio21) );
   RooFormulaVar sigma3s_1("sigma3s_1","@0*@1",RooArgList(sigma1s_1,mRatio31) );
 
@@ -102,7 +102,7 @@ void doFitJpsi_Data(
   RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
   RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
-  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.861 , 1.112,4.01);
+  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.760 , 1.215,3.97);
   RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1) );
@@ -110,7 +110,7 @@ void doFitJpsi_Data(
   RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1) );
 
 
-  RooRealVar n1s_1("n1s_1","power order", 1.804 , 1.1005, 3.99);
+  RooRealVar n1s_1("n1s_1","power order",2.104 , 1.2206, 3.97);
   RooFormulaVar n2s_1("n2s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n3s_1("n3s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n1s_2("n1s_2","1.0*@0",RooArgList(n1s_1) );
@@ -233,16 +233,16 @@ void doFitJpsi_Data(
   
 //  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE));
   RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0),Timer(0),SumW2Error(kTRUE),Extended(kTRUE));
-
+/*
   ws->pdf("model")->plotOn(myPlot2,Name("modelHist"),DrawOption("F"),FillColor(kGray+2),FillStyle(3354),Normalization(reducedDS->sumEntries()/nMassBin,RooAbsReal::NumEvent));
   ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),DrawOption("F"),FillColor(kBlue-10),FillStyle(1001),Normalization(reducedDS->sumEntries()/nMassBin,RooAbsReal::NumEvent));
   ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),DrawOption("F"),FillColor(kRed),FillStyle(1001),Normalization(ws->var("nBkg")->getVal(),RooAbsReal::NumEvent));//,Normalization(ws->var("nBkg")->getVal(),RooAbsReal::NumEvent));
+  */
   
-/*  
   ws->pdf("model")->plotOn(myPlot2,Name("modelHist"),LineColor(kBlue),LineWidth(2),LineStyle(1));//,Range(massLow, massHigh));
   ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kGray+2),LineWidth(2),LineStyle(7));
   ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kOrange+7),LineWidth(2),LineStyle(7),Range(massLow, massHigh));
-*/
+
   //  ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kRed-2),LineWidth(2),LineStyle(7),Normalization(reducedDS->sumEntries(),RooAbsReal::NumEvent));
 //  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
   //ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kMagenta+3),LineWidth(2));

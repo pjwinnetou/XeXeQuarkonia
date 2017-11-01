@@ -23,7 +23,7 @@ void doFitUpsilon_Data(
        float ptLow=0, float ptHigh=30, 
        float yLow=0, float yHigh=2.4,
        int cLow=0, int cHigh=200,
-       float muPtCut1=3.5,
+       float muPtCut1=4.0,
        float muPtCut2=4.0,
        float muPtCut=4.0,
        bool fixParameters=0  )
@@ -91,17 +91,17 @@ void doFitUpsilon_Data(
   PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
   initPset.SetMCSgl();
 
-  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.02, 0.3);
+  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.01, 0.25);
   RooFormulaVar sigma2s_1("sigma2s_1","@0*@1",RooArgList(sigma1s_1,mRatio21) );
   RooFormulaVar sigma3s_1("sigma3s_1","@0*@1",RooArgList(sigma1s_1,mRatio31) );
 
-  RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 3);
+  RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 2);
 
   RooFormulaVar sigma1s_2("sigma1s_2","@0*@1",RooArgList(sigma1s_1, *x1s) );
   RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
   RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
-  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.961 , 1.343,4.01);
+  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.961 , 1.413,4.01);
   RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1) );
@@ -109,7 +109,7 @@ void doFitUpsilon_Data(
   RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1) );
 
 
-  RooRealVar n1s_1("n1s_1","power order", 1.804 , 1.515, 3.41);
+  RooRealVar n1s_1("n1s_1","power order", 1.804 , 1.413, 3.41);
   RooFormulaVar n2s_1("n2s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n3s_1("n3s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n1s_2("n1s_2","1.0*@0",RooArgList(n1s_1) );
@@ -153,7 +153,7 @@ void doFitUpsilon_Data(
     x1s->setConstant();
   }
 
-  alpha1s_1.setVal(1.7);alpha1s_1.setConstant();
+  alpha1s_1.setVal(1.8);alpha1s_1.setConstant();
   
   RooCBShape* cb1s_1 = new RooCBShape("cball1s_1", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_1, alpha1s_1, n1s_1);
   cout << " n1s_1.getVal() = " << n1s_1.getVal() << endl;
@@ -227,12 +227,12 @@ void doFitUpsilon_Data(
   RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Timer(kTRUE),Extended(kTRUE));
   //RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE),Extended(kTRUE));
   ws->pdf("model")->plotOn(myPlot2,Name("modelHist"));
-  ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
+  ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kGray+2),LineWidth(2),LineStyle(2));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kGray+2),LineWidth(2),LineStyle(2));
   //ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kMagenta+3),LineWidth(2));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGray+2),LineWidth(2),LineStyle(2));
   //ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2));
-  ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kBlue),LineStyle(kDashed),LineWidth(2));
+  ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kOrange+7),LineStyle(kDashed),LineWidth(2));
 
   myPlot2->SetFillStyle(4000);
   myPlot2->SetAxisRange(massLowForPlot, massHighForPlot,"X");
